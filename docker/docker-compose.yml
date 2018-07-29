@@ -1,0 +1,19 @@
+version: "3.6"
+services:
+  cache:
+    image: redis:alpine
+    ports:
+      - 6379:6379
+  app:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    command: /app/hashing -r redis://cache:6379
+    environment:
+      - RUST_LOG=hashing
+    ports:
+      - 8000:8000
+    links:
+      - cache
+    depends_on:
+      - cache
