@@ -8,14 +8,8 @@ use std::string::String;
 
 use failure::Error;
 
-use super::models::{calculate_hash, Entry};
-
-// !! Store is the trait that holds the app's state.
-pub trait Store {
-    fn add_entry(&self, Entry) -> Result<u64, Error>;
-    fn fetch_entry(&self, u64) -> Result<Option<Entry>, Error>;
-    fn delete_entry(&self, u64) -> Result<(), Error>;
-}
+use super::super::models::{calculate_hash, Entry};
+use super::Store;
 
 impl Store for RedisStore {
     fn add_entry(&self, entry: Entry) -> Result<u64, Error> {

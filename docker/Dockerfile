@@ -4,10 +4,7 @@ ADD     . /app
 
 WORKDIR /app
 
-RUN      cargo build --release      &&\
-         strip /app/target/release/iojcorefer &&\
-         file /app/target/release/iojcorefer
-
+RUN     cargo build --release
 
 FROM    debian:stable-slim as release
 COPY --from=builder /app/target/release/iojcorefer /app/server

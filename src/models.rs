@@ -19,5 +19,3 @@ pub fn calculate_hash<T: Hash>(t: &T) -> u64 {
     t.hash(&mut s);
     s.finish()
 }
-
-

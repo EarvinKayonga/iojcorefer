@@ -1,23 +1,23 @@
-use std::sync::Arc;
 use failure::Error;
+use std::sync::Arc;
 
 use actix_web::{AsyncResponder, HttpMessage, HttpRequest, HttpResponse, Json, Responder};
 
 use futures::future::{result, Future, FutureResult};
 
-use super::Context;
 use super::errors;
 use super::types;
+use super::Context;
 
 use super::super::models::Entry;
-use super::super::store::Store;
-
 
 pub fn health(_: &HttpRequest<Arc<Context>>) -> impl Responder {
     Json(types::Health {})
 }
 
-pub fn get_entry(req: &HttpRequest<Arc<Context>>) -> FutureResult<HttpResponse, errors::FetchError> {
+pub fn get_entry(
+    req: &HttpRequest<Arc<Context>>,
+) -> FutureResult<HttpResponse, errors::FetchError> {
     let id: u64 = match req.match_info().get("id").map(|id| id.parse()) {
         Some(Ok(id)) => id,
         Some(Err(_)) => return result(Err(errors::FetchError::IDParsingError)),
@@ -45,7 +45,9 @@ pub fn get_entry(req: &HttpRequest<Arc<Context>>) -> FutureResult<HttpResponse, 
     result(entry)
 }
 
-pub fn post_entry(req: &HttpRequest<Arc<Context>>) -> Box<Future<Item = HttpResponse, Error = Error>> {
+pub fn post_entry(
+    req: &HttpRequest<Arc<Context>>,
+) -> Box<Future<Item = HttpResponse, Error = Error>> {
     let store = req.state().store.clone();
 
     req.json()

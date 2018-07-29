@@ -1,6 +1,3 @@
-
-
-
 // !! Structs meant for Http Requests and Responses.
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
@@ -15,5 +12,3 @@ pub struct Health {}
 pub struct Hash {
     pub hash: u64,
 }
-
-

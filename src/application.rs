@@ -6,7 +6,7 @@ use env_logger::init as log_init;
 
 use super::configuration::configuration as read_configuration;
 use super::server::{server, Context};
-use super::store::new_redis_store;
+use super::store::redis::new_redis_store;
 
 pub fn run_app() -> Result<(), Error> {
     log_init();
@@ -19,6 +19,6 @@ pub fn run_app() -> Result<(), Error> {
 
     server(Context {
         configuration: Arc::new(config.clone()),
-        store: Arc::new(redis.clone()),
+        store: Arc::new(Box::new(redis.clone())),
     })
 }

@@ -6,22 +6,19 @@ use num_cpus::get as cpus;
 use actix_web::http::Method;
 use actix_web::{fs, server, App};
 
-
 mod errors;
 mod middlewares;
 mod types;
 
-
 use configuration::Configuration;
-use store::RedisStore;
+use store::Store;
 
 // !! Context holds important values for the server.
-#[derive(Clone, Debug)]
+#[derive(Clone)]
 pub struct Context {
     pub configuration: Arc<Configuration>,
-    pub store: Arc<RedisStore>,
+    pub store: Arc<Box<Store + Send + Sync>>,
 }
-
 
 pub fn server(context: Context) -> Result<(), Error> {
     let state = context.clone();
@@ -74,8 +71,6 @@ pub fn server(context: Context) -> Result<(), Error> {
 
     Ok(reactor.run())
 }
-
-
 
 fn workers_num() -> usize {
     cpus() / 2
