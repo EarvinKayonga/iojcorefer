@@ -1,4 +1,4 @@
-FROM    rust:1.27.2-slim-stretch as builder
+FROM    rust:1.28-slim-stretch as builder
 
 ADD     . /app
 
