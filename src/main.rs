@@ -1,3 +1,14 @@
+extern crate bytes;
+
+extern crate clap;
+
+extern crate rusty_ulid;
+
+#[macro_use]
+extern crate failure;
+
+extern crate futures;
+
 extern crate actix;
 extern crate actix_web;
 
@@ -15,14 +26,6 @@ extern crate log;
 extern crate env_logger;
 
 extern crate num_cpus;
-
-extern crate bytes;
-extern crate clap;
-extern crate futures;
-extern crate rusty_ulid;
-
-#[macro_use]
-extern crate failure;
 
 mod application;
 mod configuration;

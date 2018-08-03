@@ -1,9 +1,7 @@
-use failure::Error;
-use std::sync::Arc;
-
 use actix_web::{AsyncResponder, HttpMessage, HttpRequest, HttpResponse, Json, Responder};
-
+use failure::Error;
 use futures::future::{result, Future, FutureResult};
+use std::sync::Arc;
 
 use super::errors;
 use super::types;
@@ -54,7 +52,7 @@ pub fn post_entry(
         .from_err()
         .and_then(move |entry: types::Link| {
             let id = (*store).add_entry(Entry {
-                link: entry.clone().text.clone(),
+                link: entry.text,
                 author: None,
             })?;
 

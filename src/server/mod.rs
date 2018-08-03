@@ -1,17 +1,15 @@
-use std::sync::Arc;
-
-use failure::Error;
-use num_cpus::get as cpus;
-
 use actix_web::http::Method;
 use actix_web::{fs, server, App};
+use failure::Error;
+use num_cpus::get as cpus;
+use std::sync::Arc;
+
+use configuration::Configuration;
+use store::Store;
 
 mod errors;
 mod middlewares;
 mod types;
-
-use configuration::Configuration;
-use store::Store;
 
 // !! Context holds important values for the server.
 #[derive(Clone)]
@@ -34,16 +32,7 @@ pub fn server(context: Context) -> Result<(), Error> {
                 .clone()
                 .server
                 .folder.as_str())
-                        .map_err(|err| {
-                            {
-                                use std::process;
-                                error!("an error occured while setting server {:?}", err);
-                                process::exit(1);
-                            }
-
-                            format_err!("an error occured while setting server {:?}", err)
-                        })
-                        .unwrap();
+                        .expect("missing static folder");
 
         App::with_state(state)
             .resource("/api/v1/entries/new", |r| r.method(Method::POST).f(middlewares::post_entry))
@@ -66,7 +55,8 @@ pub fn server(context: Context) -> Result<(), Error> {
         state.clone().configuration.clone().server.port
     );
 
-    let reactor = sys.bind(socket.as_str())
+    let reactor = sys
+        .bind(socket.as_str())
         .map_err(|err| format_err!("an error occured while setting server {:?}", err))?;
 
     Ok(reactor.run())

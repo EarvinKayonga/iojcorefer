@@ -1,8 +1,6 @@
-use std::string::String;
-
-use failure::Error;
-
 use clap::{App as args, Arg, ArgMatches};
+use failure::Error;
+use std::string::String;
 
 // general configuration across all the app.
 #[derive(Clone, Debug)]

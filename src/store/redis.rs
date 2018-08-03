@@ -18,20 +18,17 @@ impl Store for RedisStore {
 
         if let Some(author) = entry.author {
             connection.hset_multiple(
-                hash.clone().to_string().as_str(),
+                hash.to_string().as_str(),
                 &[
                     ("link", entry.link.as_str()),
                     ("author", author.to_string().as_str()),
                 ],
             )?;
         } else {
-            connection.hset_multiple(
-                hash.clone().to_string().as_str(),
-                &[("link", entry.link.as_str())],
-            )?;
+            connection.hset_multiple(hash.to_string().as_str(), &[("link", entry.link.as_str())])?;
         }
 
-        Ok(hash.clone())
+        Ok(hash)
     }
 
     fn fetch_entry(&self, hash: u64) -> Result<Option<Entry>, Error> {
@@ -65,11 +62,11 @@ impl Store for RedisStore {
         let connection = self.get_connection()?;
 
         connection
-            .hdel(hash.clone(), "link")
+            .hdel(hash, "link")
             .map_err(|err| format_err!("an error occured while deleting link field {:?}", err))?;
 
         connection
-            .hdel(hash.clone(), "author")
+            .hdel(hash, "author")
             .map_err(|err| format_err!("an error occured while deleting author field {:?}", err))
     }
 }
@@ -102,11 +99,11 @@ pub fn new_redis_store(url: String) -> Result<RedisStore, Error> {
         .build(manager)
         .map_err(|err| format_err!("an error occured while creating redis pool {:?}", err))?;
 
-    let _ping = pool.clone()
+    let _ping = pool
         .get()
         .map_err(|err| format_err!("an error occured while connecting to redis {:?}", err))?;
 
     info!("connection with redis [{}] is live", url.clone());
 
-    Ok(RedisStore { pool: pool.clone() })
+    Ok(RedisStore { pool: pool })
 }
