@@ -8,7 +8,7 @@ services:
     build:
       context: ..
       dockerfile: docker/Dockerfile
-    command: /app/hashing -r redis://cache:6379
+    command: /app/server -r redis://cache:6379
     environment:
       - RUST_LOG=hashing
     ports:
