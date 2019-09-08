@@ -13,7 +13,7 @@ use super::Store;
 
 impl Store for RedisStore {
     fn add_entry(&self, entry: Entry) -> Result<u64, Error> {
-        let connection = self.get_connection()?;
+        let mut connection = self.get_connection()?;
         let hash = calculate_hash(&entry);
 
         if let Some(author) = entry.author {
@@ -25,14 +25,15 @@ impl Store for RedisStore {
                 ],
             )?;
         } else {
-            connection.hset_multiple(hash.to_string().as_str(), &[("link", entry.link.as_str())])?;
+            connection
+                .hset_multiple(hash.to_string().as_str(), &[("link", entry.link.as_str())])?;
         }
 
         Ok(hash)
     }
 
     fn fetch_entry(&self, hash: u64) -> Result<Option<Entry>, Error> {
-        let connection = self.get_connection()?;
+        let mut connection = self.get_connection()?;
 
         let record: HashMap<String, String> = connection
             .hgetall(hash.to_string().as_str())
@@ -59,7 +60,7 @@ impl Store for RedisStore {
     }
 
     fn delete_entry(&self, hash: u64) -> Result<(), Error> {
-        let connection = self.get_connection()?;
+        let mut connection = self.get_connection()?;
 
         connection
             .hdel(hash, "link")

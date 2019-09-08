@@ -25,21 +25,21 @@ pub fn server(context: Context) -> Result<(), Error> {
         let context = Arc::new(context.clone());
         let state = context.clone();
 
-        let folder = fs::StaticFiles::new(
-            state
-                .clone()
-                .configuration
-                .clone()
-                .server
-                .folder.as_str())
-                        .expect("missing static folder");
+        let folder =
+            fs::StaticFiles::new(state.clone().configuration.clone().server.folder.as_str())
+                .expect("missing static folder");
 
         App::with_state(state)
-            .resource("/api/v1/entries/new", |r| r.method(Method::POST).f(middlewares::post_entry))
-            .resource("/api/v1/entry/{id}", |r| r.method(Method::GET).a(middlewares::get_entry))
-            .resource("/api/v1/health", |r| r.method(Method::GET).f(middlewares::health))
+            .resource("/api/v1/entries/new", |r| {
+                r.method(Method::POST).f(middlewares::post_entry)
+            })
+            .resource("/api/v1/entry/{id}", |r| {
+                r.method(Method::GET).a(middlewares::get_entry)
+            })
+            .resource("/api/v1/health", |r| {
+                r.method(Method::GET).f(middlewares::health)
+            })
             .handler("/", folder)
-
     })
     .shutdown_timeout(10) // <- Set shutdown timeout to 10 seconds
     .workers(workers_num());
