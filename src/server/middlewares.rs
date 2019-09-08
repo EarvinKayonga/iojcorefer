@@ -45,7 +45,7 @@ pub fn get_entry(
 
 pub fn post_entry(
     req: &HttpRequest<Arc<Context>>,
-) -> Box<Future<Item = HttpResponse, Error = Error>> {
+) -> Box<dyn Future<Item = HttpResponse, Error = Error>> {
     let store = req.state().store.clone();
 
     req.json()

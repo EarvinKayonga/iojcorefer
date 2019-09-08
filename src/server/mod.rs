@@ -15,7 +15,7 @@ mod types;
 #[derive(Clone)]
 pub struct Context {
     pub configuration: Arc<Configuration>,
-    pub store: Arc<Box<Store + Send + Sync>>,
+    pub store: Arc<Box<dyn Store + Send + Sync>>,
 }
 
 pub fn server(context: Context) -> Result<(), Error> {
