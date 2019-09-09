@@ -3,18 +3,19 @@ use failure::Error;
 use futures::future::{result, Future, FutureResult};
 use std::sync::Arc;
 
+use store::Store;
 use super::errors;
 use super::types;
 use super::Context;
 
 use super::super::models::Entry;
 
-pub fn health(_: &HttpRequest<Arc<Context>>) -> impl Responder {
+pub fn health<T: 'static + Store + Send + Sync + Clone>(_: &HttpRequest<Arc<Context<T>>>) -> impl Responder {
     Json(types::Health {})
 }
 
-pub fn get_entry(
-    req: &HttpRequest<Arc<Context>>,
+pub fn get_entry<T: 'static + Store + Send + Sync + Clone>(
+    req: &HttpRequest<Arc<Context<T>>>,
 ) -> FutureResult<HttpResponse, errors::FetchError> {
     let id: u64 = match req.match_info().get("id").map(|id| id.parse()) {
         Some(Ok(id)) => id,
@@ -43,8 +44,8 @@ pub fn get_entry(
     result(entry)
 }
 
-pub fn post_entry(
-    req: &HttpRequest<Arc<Context>>,
+pub fn post_entry<T: 'static + Store + Send + Sync + Clone>(
+    req: &HttpRequest<Arc<Context<T>>>,
 ) -> Box<dyn Future<Item = HttpResponse, Error = Error>> {
     let store = req.state().store.clone();
 

@@ -21,7 +21,7 @@ pub fn run_app() -> Result<(), Error> {
 
     server(Context {
         configuration: Arc::new(config),
-        store: Arc::new(Box::new(redis)),
+        store: Arc::new(redis),
     })
 }
 

@@ -13,12 +13,12 @@ mod types;
 
 // !! Context holds important values for the server.
 #[derive(Clone)]
-pub struct Context {
+pub struct Context<T: 'static + Store + Send + Sync + Clone> {
     pub configuration: Arc<Configuration>,
-    pub store: Arc<Box<dyn Store + Send + Sync>>,
+    pub store: Arc<T>,
 }
 
-pub fn server(context: Context) -> Result<(), Error> {
+pub fn server<T: 'static + Store + Send + Sync + Clone>(context: Context<T>) -> Result<(), Error> {
     let state = context.clone();
 
     let sys = server::new(move || {
