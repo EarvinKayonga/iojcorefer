@@ -3,14 +3,15 @@ use failure::Error;
 use futures::future::{result, Future, FutureResult};
 use std::sync::Arc;
 
-use store::Store;
 use super::errors;
 use super::types;
 use super::Context;
+use crate::models::Entry;
+use crate::store::Store;
 
-use super::super::models::Entry;
-
-pub fn health<T: 'static + Store + Send + Sync + Clone>(_: &HttpRequest<Arc<Context<T>>>) -> impl Responder {
+pub fn health<T: 'static + Store + Send + Sync + Clone>(
+    _: &HttpRequest<Arc<Context<T>>>,
+) -> impl Responder {
     Json(types::Health {})
 }
 

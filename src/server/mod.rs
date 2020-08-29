@@ -4,8 +4,8 @@ use failure::Error;
 use num_cpus::get as cpus;
 use std::sync::Arc;
 
-use configuration::Configuration;
-use store::Store;
+use crate::configuration::Configuration;
+use crate::store::Store;
 
 mod errors;
 mod middlewares;
