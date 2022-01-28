@@ -13,10 +13,10 @@ pub fn run_app() -> Result<(), Error> {
     let config = read_configuration()
         .map_err(|e| format_err!("an error occured while reading configuration: {}", e))?;
 
-    let _ = are_static_files_present(&config.clone().server.folder)
+    let _ = are_static_files_present(&config.server.folder)
         .map_err(|e| format_err!("an error occured while opening static files folder {}", e))?;
 
-    let redis = new_redis_store(config.clone().redis_address)
+    let redis = new_redis_store(&config.redis_address)
         .map_err(|e| format_err!("an error occured while connecting to store: {}", e))?;
 
     server(Context {

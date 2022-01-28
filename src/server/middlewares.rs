@@ -27,18 +27,15 @@ pub fn get_entry<T: 'static + Store + Send + Sync + Clone>(
     let store = req.state().store.clone();
 
     let entry = match (*store).fetch_entry(id) {
+        Ok(None) => Err(errors::FetchError::NotFoundError),
         Err(err) => {
             error!("an error occured while fetching entry {:?}", err);
 
             Err(errors::FetchError::StoreError)
         }
-        Ok(option) => {
-            if let Some(entry) = option {
-                let response = types::Link { text: entry.link };
-                Ok(HttpResponse::Ok().json(response))
-            } else {
-                Err(errors::FetchError::NotFoundError)
-            }
+        Ok(Some(entry)) => {
+            let response = types::Link { text: entry.link };
+            Ok(HttpResponse::Ok().json(response))
         }
     };
 

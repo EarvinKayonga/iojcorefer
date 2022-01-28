@@ -85,10 +85,10 @@ pub struct RedisStore {
     pub pool: Pool<RedisConnectionManager>,
 }
 
-pub fn new_redis_store(url: String) -> Result<RedisStore, Error> {
-    debug!("connecting to [{}]", url.clone());
+pub fn new_redis_store(url: &str) -> Result<RedisStore, Error> {
+    debug!("connecting to [{}]", url);
 
-    let manager = RedisConnectionManager::new(url.clone().as_str()).map_err(|err| {
+    let manager = RedisConnectionManager::new(url).map_err(|err| {
         format_err!(
             "an error occured while creating redis connection manager{:?}",
             err
@@ -104,7 +104,7 @@ pub fn new_redis_store(url: String) -> Result<RedisStore, Error> {
         .get()
         .map_err(|err| format_err!("an error occured while connecting to redis {:?}", err))?;
 
-    info!("connection with redis [{}] is live", url.clone());
+    info!("connection with redis [{}] is live", url);
 
     Ok(RedisStore { pool: pool })
 }

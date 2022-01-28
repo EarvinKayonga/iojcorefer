@@ -46,9 +46,9 @@ fn from_cli(matches: ArgMatches<'static>) -> Result<Configuration, Error> {
     Ok(Configuration {
         redis_address: cache,
         server: Server {
-            address: address,
-            port: port,
-            folder: folder,
+            address,
+            port,
+            folder,
         },
     })
 }
